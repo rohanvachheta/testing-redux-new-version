@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 
 import Pagination from "@material-ui/lab/Pagination";
@@ -8,7 +8,6 @@ import Container from "@material-ui/core/Container";
 import ProfileCard from "./components/Card.component";
 import ListItems from "./components/List.component";
 import { callUserDetails, sortuserAction as sortuser } from "./actions";
-import { Select } from "@material-ui/core";
 
 const App = ({
   callUserDetailsAction,
@@ -19,8 +18,11 @@ const App = ({
   const [page, setPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const selectRef = useRef(null);
+
   useEffect(() => {
     callUserDetailsAction(page);
+    selectRef.current.value = "None";
   }, [page, callUserDetailsAction]);
 
   const handleDropdownChange = (e) => {
@@ -39,13 +41,13 @@ const App = ({
             />
           ) : (
             <>
-              <Select onChange={handleDropdownChange} defaultValue="None">
+              <select ref={selectRef} onChange={handleDropdownChange}>
                 <option aria-label="None" value="None">
                   None
                 </option>
                 <option value={"A-Z"}>A-Z</option>
                 <option value={"Z-A"}>Z-A</option>
-              </Select>
+              </select>
               <ListItems
                 listItem={usersList || []}
                 setSelectedUser={setSelectedUser}
